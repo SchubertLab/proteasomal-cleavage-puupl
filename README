@@ -1,0 +1,4 @@
+Improved proteasomal cleavage prediction with positive-unlabeled learning
+===
+
+This repository contains configurations and pretrained models for proteasomal cleavage prediction.
