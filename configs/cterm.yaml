@@ -1,0 +1,67 @@
+loss:
+  class: combined_loss
+  params:
+    pseudo_labeled_loss_weight: 0.05
+    pseudo_labeled_loss:
+      class: binary_cross_entropy
+    positive_unlabeled_loss:
+      class: nnpu
+      params:
+        prior: 0.15
+        oversampled_prior: 0.5
+
+dataset:
+  class: proteasomal_cleavage
+  n_labeled: null
+  val_size: 50000
+  test_size: 50000
+  seed: 892735
+  terminus: c
+  cv_total_folds: 10
+  cv_current_fold: -1
+
+architecture:
+  class: ensemble
+  params:
+    backbone: mlp
+    ensemble_size: 25
+    reset_to_same_weights: True
+    input_shape: 240
+    layer_shape: 64
+    n_hidden_layers: 4
+
+
+pseudolabeler:
+  max_new_labels: 250
+  new_labels_max_uncertainty: 0.05
+  new_labels_uncertainty_percentile: 2
+  use_soft_labels: True
+  new_labels_pos_neg_ratio:
+  reassign_pseudo_labels: False
+  unlabel_min_uncertainty: 0.6
+
+exp_params:
+  batch_size: 2048
+  optimizer: Adam
+  learning_rate: 0.002
+  scheduler_gamma: 0.95
+  weight_decay: 5e-06
+  hyperband_output_dir: null
+  dataloader_workers: 0
+  pseudolabel_every: 10
+  reset_weights_after_pl: True
+  temperature_scale: False
+  uncertainty_type: aleatoric
+  sample_weights: uniform
+  validation_metric: val_pu_auc
+
+trainer_params:
+  max_epochs:
+  pl_iterations: 30
+  gpus: -1
+  progress_bar_refresh_rate: 0
+
+logging_params:
+  manual_seed: 121243760
+  experiment_name: proc-cterm
+  run_name: final
